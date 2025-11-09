@@ -2,6 +2,55 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import html2canvas from "html2canvas";
+
+// Utility function to convert oklch colors to hsl
+const convertOklchToHsl = (oklchString: string): string => {
+  // Try to parse oklch value and convert to hsl
+  // This is a simple fallback - in production you might want a more sophisticated converter
+  if (oklchString.includes("blue")) return "hsl(221, 83%, 53%)";
+  if (oklchString.includes("gray")) return "hsl(210, 20%, 98%)";
+  if (oklchString.includes("red")) return "hsl(0, 84%, 60%)";
+  if (oklchString.includes("green")) return "hsl(142, 71%, 45%)";
+  if (oklchString.includes("yellow")) return "hsl(48, 96%, 53%)";
+  if (oklchString.includes("purple")) return "hsl(262, 84%, 58%)";
+  return "hsl(221, 83%, 53%)"; // default blue
+};
+
+// Function to process element and replace oklch colors
+const processColorsForHtml2Canvas = (element: HTMLElement): void => {
+  const allElements = element.querySelectorAll("*");
+
+  allElements.forEach((el) => {
+    const htmlEl = el as HTMLElement;
+    const computedStyle = window.getComputedStyle(htmlEl);
+
+    // Check background properties for oklch
+    const bgColor = computedStyle.backgroundColor;
+    const bgImage = computedStyle.backgroundImage;
+
+    if (bgColor && bgColor.includes("oklch")) {
+      // Replace with Tailwind blue
+      htmlEl.style.backgroundColor = "#3b82f6";
+    }
+
+    if (bgImage && bgImage.includes("oklch")) {
+      // Replace gradient with fallback
+      htmlEl.style.backgroundImage =
+        "linear-gradient(to right, #3b82f6, #2563eb)";
+    }
+
+    // Also check other color properties
+    const color = computedStyle.color;
+    if (color && color.includes("oklch")) {
+      htmlEl.style.color = "#374151";
+    }
+
+    const borderColor = computedStyle.borderColor;
+    if (borderColor && borderColor.includes("oklch")) {
+      htmlEl.style.borderColor = "#d1d5db";
+    }
+  });
+};
 import { useGeolocated } from "react-geolocated";
 import { SwarmIDCard } from "@/components/SwarmIDCard";
 import { TRANSLATIONS, Language } from "@/lib/translations";
@@ -122,11 +171,26 @@ export default function SwarmIDCardGenerator() {
     if (!cardRef.current) return;
 
     try {
-      const canvas = await html2canvas(cardRef.current, {
+      // Create a clone of the card element to process colors
+      const cardClone = cardRef.current.cloneNode(true) as HTMLElement;
+
+      // Replace oklch colors with compatible format
+      processColorsForHtml2Canvas(cardClone);
+
+      // Temporarily add the clone to document (out of viewport)
+      cardClone.style.position = "absolute";
+      cardClone.style.left = "-9999px";
+      cardClone.style.top = "0";
+      document.body.appendChild(cardClone);
+
+      const canvas = await html2canvas(cardClone, {
         scale: 2,
         backgroundColor: "#ffffff",
         logging: false,
       });
+
+      // Clean up the clone
+      document.body.removeChild(cardClone);
 
       const link = document.createElement("a");
       link.download = `swarm-id-${cardData.id}.png`;

@@ -69,7 +69,7 @@ export const SwarmIDCard = React.forwardRef<HTMLDivElement, SwarmIDCardProps>(
           className={`absolute top-0 right-0 bottom-0 w-4 bg-gradient-to-b ${colorScheme.gold} shadow-lg`}
         ></div>
 
-        {/* 主标题区域 - 调整顶部边距 */}
+        {/* 主标题区域 - 原始比例 */}
         <div className="text-center pt-8 pb-2 relative">
           <h2 className="text-2xl font-bold tracking-wider drop-shadow-lg">
             SWARM ID
@@ -82,14 +82,14 @@ export const SwarmIDCard = React.forwardRef<HTMLDivElement, SwarmIDCardProps>(
           </div>
         </div>
 
-        {/* 主要内容区域 */}
+        {/* 主要内容区域 - 原始布局 */}
         <div className="px-12 py-2">
           <div className="flex gap-5 items-center">
-            {/* 左侧头像区域 */}
+            {/* 左侧头像区域 - 原始比例 */}
             <div className="flex flex-col items-center">
               <div className="relative">
                 <div
-                  className={`w-30 h-30 rounded-full bg-white/20 border-3 border-white/50 flex items-center justify-center overflow-hidden shadow-xl`}
+                  className={`w-[120px] h-[120px] rounded-full bg-white/20 border-[3px] border-white/50 flex items-center justify-center overflow-hidden shadow-xl`}
                 >
                   {data.avatar ? (
                     <img
@@ -98,17 +98,17 @@ export const SwarmIDCard = React.forwardRef<HTMLDivElement, SwarmIDCardProps>(
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <div className="text-6xl opacity-60">👤</div>
+                    <div className="text-[70px] opacity-60">👤</div>
                   )}
                 </div>
                 {/* 头像外圈装饰 */}
                 <div
-                  className={`absolute inset-0 w-30 h-30 rounded-full border-2 ${textColor === "white" ? "border-white/30" : "border-gray-900/30"}`}
+                  className={`absolute inset-0 w-[120px] h-[120px] rounded-full border-2 ${textColor === "white" ? "border-white/30" : "border-gray-900/30"}`}
                 ></div>
               </div>
             </div>
 
-            {/* 中间信息区域 */}
+            {/* 中间信息区域 - 原始比例 */}
             <div className="flex-1 space-y-4">
               {/* 姓名 */}
               <div>
@@ -133,7 +133,7 @@ export const SwarmIDCard = React.forwardRef<HTMLDivElement, SwarmIDCardProps>(
               </div>
             </div>
 
-            {/* 右侧二维码区域 */}
+            {/* 右侧二维码区域 - 原始比例 */}
             <div className="flex flex-col items-center">
               <div className="text-xs opacity-80 font-medium mb-2">QR Code</div>
               <div
